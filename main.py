@@ -5,8 +5,8 @@ app = Flask(__name__)
 @app.route('/')
 def hello():
     return render_template_string("""
-        <h1>Hello, World!</h1>
-        <img src="{{ url_for('static', filename='image.jpg') }}" alt="Hello Image" width="300">
+        <h1>Hello, CloudThat!!!</h1>
+        <img src="{{ url_for('static', filename='cloudthat.jpg') }}" alt="Hello Image" width="300">
     """)
 
 if __name__ == '__main__':
