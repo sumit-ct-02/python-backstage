@@ -19,5 +19,19 @@ jobs:
       - name: Install Flask
         run: pip install flask
 
+      - name: Set up ngrok
+        run: |
+          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc
+          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+          sudo apt update && sudo apt install -y ngrok
+          ngrok http 5000 > /dev/null &
+
       - name: Run Flask app
-        run: python main.py
+        run: |
+          nohup python main.py > flask.log 2>&1 &
+
+      - name: Wait for services to initialize
+        run: sleep 10
+
+      - name: Get ngrok URL
+        run: curl http://127.0.0.1:4040/api/tunnels
