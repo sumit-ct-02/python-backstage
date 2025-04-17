@@ -1,27 +1,23 @@
-name: Run Python Script
+name: Run Flask Hello App
 
 on:
-  workflow_dispatch:  # Allows manual trigger via GitHub UI
+  workflow_dispatch:
 
 jobs:
-  run-python-script:
+  run-flask:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
-        uses: actions/checkout@v2
+      - name: Checkout repo
+        uses: actions/checkout@v3
 
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
-          python-version: '3.10'  # You can change this to your version
+          python-version: '3.10'
 
-      - name: Install dependencies (if any)
-        run: |
-          pip install -r requirements.txt || echo "No requirements.txt found"
+      - name: Install Flask
+        run: pip install flask
 
-      - name: change directory
-        run: cd ./app
-
-      - name: Run Python file
+      - name: Run Flask app
         run: python main.py
