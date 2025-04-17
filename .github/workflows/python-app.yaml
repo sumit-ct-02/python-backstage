@@ -1,4 +1,4 @@
-name: Run Flask Hello App
+name: Run Flask Hello App with Ngrok
 
 on:
   workflow_dispatch:
@@ -16,22 +16,26 @@ jobs:
         with:
           python-version: '3.10'
 
-      - name: Install Flask
-        run: pip install flask
-
-      - name: Set up ngrok
+      - name: Install dependencies
         run: |
-          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc
-          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list
+          pip install flask
+          sudo apt update
+          sudo apt install -y jq curl
+
+      - name: Start Flask app in background
+        run: |
+          python main.py &
+        env:
+          FLASK_ENV: development
+
+      - name: Install and start Ngrok
+        run: |
+          curl -s https://ngrok-agent.s3.amazonaws.com/ngrok.asc | sudo tee /etc/apt/trusted.gpg.d/ngrok.asc >/dev/null
+          echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list >/dev/null
           sudo apt update && sudo apt install -y ngrok
           ngrok http 5000 > /dev/null &
-
-      - name: Run Flask app
-        run: |
-          nohup python main.py > flask.log 2>&1 &
-
-      - name: Wait for services to initialize
-        run: sleep 10
+          sleep 5  # give ngrok some time to establish the tunnel
 
       - name: Get ngrok URL
-        run: curl http://127.0.0.1:4040/api/tunnels
+        run: |
+          curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url'
