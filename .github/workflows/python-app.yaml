@@ -34,13 +34,15 @@ jobs:
           echo "deb https://ngrok-agent.s3.amazonaws.com buster main" | sudo tee /etc/apt/sources.list.d/ngrok.list >/dev/null
           sudo apt update && sudo apt install -y ngrok
           
-          # Add your Ngrok authtoken here
           ngrok config add-authtoken 2vqADUR50VBWcrVWjZQd2j8L8Ww_7exZLgnX3jTyRYHfgG7mH
-
-          # Start ngrok tunnel in background
           ngrok http 5000 > /dev/null &
-          sleep 5  # give ngrok some time to establish the tunnel
+          sleep 5
 
       - name: Get ngrok URL
         run: |
           curl -s http://127.0.0.1:4040/api/tunnels | jq -r '.tunnels[0].public_url'
+
+      - name: Keep the job alive for 120 seconds
+        run: |
+          echo "Waiting 120 seconds before shutting down..."
+          sleep 120
