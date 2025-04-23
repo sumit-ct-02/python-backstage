@@ -8,7 +8,7 @@ metadata:
   annotations:
     devcontainers.io/remote-url: https://raw.githubusercontent.com/sumit-ct-02/python-backstage/main/.devcontainer/devcontainer.json
     github.com/project-slug: sumit-ct-02/python-backstage
-     # backstage.io/techdocs-ref: dir:. 
+    # backstage.io/techdocs-ref: dir:. 
 spec:
   type: service
   owner: sumit
