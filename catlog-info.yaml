@@ -6,7 +6,7 @@ metadata:
   tags:
     - 'devcontainers'
   annotations:
-    devcontainers.io/vscode-url: 'vscode://devcontainers/open?url=https://github.com/sumit-ct-02/python-backstage'
+    devcontainers.io/remote-url: 'vscode://devcontainers/open?url=https://github.com/sumit-ct-02/python-backstage'
     github.com/project-slug: sumit-ct-02/python-backstage
 spec:
   type: service
