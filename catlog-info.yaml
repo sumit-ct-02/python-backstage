@@ -6,7 +6,7 @@ metadata:
   tags:
     - 'devcontainers'
   annotations:
-    devcontainers.io/remote-url: 'https://raw.githubusercontent.com/sumit-ct-02/python-backstage/main/.devcontainer/devcontainer.json'
+    devcontainers.io/remote-url: 'vscode://devcontainers/open?url=https%3A%2F%2Fgithub.com%2Fsumit-ct-02%2Fpython-backstage'
     github.com/project-slug: sumit-ct-02/python-backstage
     # backstage.io/techdocs-ref: dir:. 
 spec:
