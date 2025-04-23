@@ -4,7 +4,7 @@ metadata:
   name: python-template
   description: Python app scaffolding template
   tags:
-    - devcontainer
+    - devcontainers
   annotations:
     devcontainers.io/remote-url: 'https://raw.githubusercontent.com/sumit-ct-02/python-backstage/main/.devcontainer/devcontainer.json'
     github.com/project-slug: sumit-ct-02/python-backstage
