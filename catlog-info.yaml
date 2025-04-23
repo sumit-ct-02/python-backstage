@@ -6,10 +6,10 @@ metadata:
   tags:
     - devcontainers
   annotations:
-    devcontainers.io/remote-url: https://github.com/sumit-ct-02/python-backstage/blob/main/.devcontainer/devcontainer.json
+    devcontainers.io/remote-url:devcontainers.io/remote-url: https://raw.githubusercontent.com/sumit-ct-02/python-backstage/main/.devcontainer/devcontainer.json
     github.com/project-slug: sumit-ct-02/python-backstage
      # backstage.io/techdocs-ref: dir:. 
 spec:
   type: service
-  owner: narsapurkarthik
+  owner: sumit
   lifecycle: experimental
