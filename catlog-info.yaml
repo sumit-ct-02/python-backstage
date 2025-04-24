@@ -6,6 +6,7 @@ metadata:
   tags:
     - 'devcontainers'
   annotations:
+    prometheus.io/targets: '[{"url":"http://localhost:9090"}]'
     devcontainers.io/remote-url: 'vscode://devcontainers/open?url=https://github.com/sumit-ct-02/python-backstage'
     github.com/project-slug: sumit-ct-02/python-backstage
 spec:
