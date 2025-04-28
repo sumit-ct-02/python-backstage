@@ -24,11 +24,10 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ami-123   # <<< replace with your AMI
+          ec2-image-id: ami-0e35ddab05955cf57   # <<< replace with your AMI
           ec2-instance-type: t3.nano
-          subnet-id: subnet-123   # <<< replace with your Subnet ID
-          security-group-id: sg-123   # <<< replace with your Security Group ID
-          iam-role-name: my-role-name  # optional
+          subnet-id: subnet-0376b05408a1be5d4  
+          security-group-id: sg-0285f18af6bb116b3
           aws-resource-tags: >
             [
               {"Key": "Name", "Value": "ec2-github-runner"},
