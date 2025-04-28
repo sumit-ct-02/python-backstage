@@ -31,8 +31,8 @@ jobs:
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ami-0e35ddab05955cf57   # <<< replace with your AMI
           ec2-instance-type: t3.nano
-          subnet-id: subnet-0376b05408a1be5d4  
-          security-group-id: sg-0285f18af6bb116b3
+          subnet-id: subnet-055bc0f5f47a83b3a  
+          security-group-id: sg-08baa8217c415d23c
           aws-resource-tags: >
             [
               {"Key": "Name", "Value": "ec2-github-runner"},
