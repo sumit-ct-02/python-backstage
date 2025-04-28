@@ -30,7 +30,7 @@ jobs:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
           ec2-image-id: ami-0e35ddab05955cf57   # <<< replace with your AMI
-          ec2-instance-type: t3.nano
+          ec2-instance-type: t2.micro
           subnet-id: subnet-055bc0f5f47a83b3a  
           security-group-id: sg-08baa8217c415d23c
           aws-resource-tags: >
@@ -46,11 +46,7 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
-
-      - name: Update apt
-        run: |
-          sudo apt update
-      
+        
       - name: Set up Python
         uses: actions/setup-python@v4
         with:
