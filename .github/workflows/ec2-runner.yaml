@@ -66,8 +66,10 @@ jobs:
 
       - name: Wait and keep server alive
         run: |
-          echo "Flask app started. Keeping server alive for 300 seconds..."
-          sleep 300
+           PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
+           echo "Flask app started at: http://$PUBLIC_IP:5000"
+           echo "On EC2 instance ID: ${{ needs.start-runner.outputs.ec2-instance-id }}"
+           sleep 300
 
   stop-runner:
     name: Stop self-hosted EC2 runner
@@ -75,6 +77,8 @@ jobs:
       - start-runner
       - run-flask
     runs-on: ubuntu-latest
+    environment: Backstage
+    
     if: ${{ always() }}
     steps:
       - name: Configure AWS credentials
