@@ -51,8 +51,11 @@ jobs:
           echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_OUTPUT
       - name: Wait Till EC2 Starts
         run: |
-          echo ${{ steps.start-ec2-runner.outputs.INSTANCE_ID }}
-          aws ec2 wait instance-running --instance-ids ${{ steps.start-ec2-runner.outputs.INSTANCE_ID }}
+          INSTANCE_ID=${{ steps.start-ec2-runner.outputs.INSTANCE_ID }}
+          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
+          echo "$INSTANCE_ID Running "
+          aws ec2 wait instance-status-ok --instance-ids $INSTANCE_ID
+          echo "$INSTANCE_ID in OK State"
   
   run-flask:
     name: Run Flask App
