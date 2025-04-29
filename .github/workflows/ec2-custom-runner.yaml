@@ -49,6 +49,8 @@ jobs:
             --query 'Instances[0].InstanceId' \
             --output text)
           echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_OUTPUT
+          
+          aws ec2 wait instance-running --instance-ids $INSTANCE_ID
   
   run-flask:
     name: Run Flask App
