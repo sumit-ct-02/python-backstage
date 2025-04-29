@@ -92,7 +92,7 @@ jobs:
            PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
            echo "Flask app started at: http://$PUBLIC_IP:5000"
            echo "On EC2 instance ID: ${{ needs.start-runner.outputs.instance-id }}"
-           sleep 300
+           sleep 120
   
   stop-runner:
     name: Stop self-hosted EC2 runner
