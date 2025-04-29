@@ -37,8 +37,8 @@
             # Extract the installer
             tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
             # Create the runner and start the configuration experience
-            sudo chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
-            sudo chmod -R 755 /home/ubuntu/actions-runner
+            chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
+            chmod -R 755 /home/ubuntu/actions-runner
             ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWKQUBGICYKMPVIYAU3ICCBZY --labels ec2 --unattended
             ./run.sh
             EOF
