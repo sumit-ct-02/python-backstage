@@ -1,106 +1,102 @@
-  name: Run Flask App on EC2 Runner
+name: Run Flask App on EC2 Runner
   
-  on:
-    workflow_dispatch:
+on:
+  workflow_dispatch:
   
-  jobs:
-    start-runner:
-      name: Start self-hosted EC2 runner
-      runs-on: ubuntu-latest
-      environment: Backstage
-      outputs:
-        label: ec2
-        instance-id: ${{ steps.start-ec2-runner.outputs.INSTANCE_ID }}
-      steps:
-        - name: Verify AWS credentials
-          run: |
-            echo "AWS Access Key ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
-            echo "AWS Region: ${{ secrets.AWS_REGION }}"
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ${{ secrets.AWS_REGION }}
+jobs:
+  start-runner:
+    name: Start self-hosted EC2 runner
+    runs-on: ubuntu-latest
+    environment: Backstage
+    outputs:
+      label: ec2
+      instance-id: ${{ steps.start-ec2-runner.outputs.INSTANCE_ID }}
+    steps:
+      - name: Verify AWS credentials
+        run: |
+          echo "AWS Access Key ID: ${{ secrets.AWS_ACCESS_KEY_ID }}"
+          echo "AWS Region: ${{ secrets.AWS_REGION }}"
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
   
-        - name: Launch EC2 instance
-          id: start-ec2-runner
-          run: |
-            USER_DATA=$(base64 -w0 <<EOF
-            #!/bin/bash
-            apt update
-            # Make A Directory 
-            cd /home/ubuntu
-            mkdir actions-runner && cd actions-runner     
-            # Download the latest runner package
-            curl -o actions-runner-linux-x64-2.323.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.323.0/actions-runner-linux-x64-2.323.0.tar.gz
-            # Extract the installer
-            tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
-            # Create the runner and start the configuration experience
-            chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
-            chmod -R 755 /home/ubuntu/actions-runner
-            ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWKQUBGICYKMPVIYAU3ICCBZY --labels ec2 --unattended
-            ./run.sh
-            EOF
-            )
-            INSTANCE_ID=$(aws ec2 run-instances \
-              --image-id ami-0e35ddab05955cf57 \
-              --instance-type t2.micro \
-              --subnet-id subnet-055bc0f5f47a83b3a \
-              --security-group-ids sg-08baa8217c415d23c \
-              --user-data $USER_DATA \
-              --query 'Instances[0].InstanceId' \
-              --output text)
-            echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_OUTPUT
+      - name: Launch EC2 instance
+        id: start-ec2-runner
+        run: |
+          USER_DATA=$(base64 -w0 <<EOF
+          #!/bin/bash
+          apt update
+          cd /home/ubuntu
+          mkdir actions-runner && cd actions-runner     
+          curl -o actions-runner-linux-x64-2.323.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.323.0/actions-runner-linux-x64-2.323.0.tar.gz
+          tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
+          chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
+          chmod -R 755 /home/ubuntu/actions-runner
+          ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWKQUBGICYKMPVIYAU3ICCBZY --labels ec2 --unattended
+          ./run.sh
+          EOF
+          )
+          INSTANCE_ID=$(aws ec2 run-instances \
+            --image-id ami-0e35ddab05955cf57 \
+            --instance-type t2.micro \
+            --subnet-id subnet-055bc0f5f47a83b3a \
+            --security-group-ids sg-08baa8217c415d23c \
+            --user-data $USER_DATA \
+            --query 'Instances[0].InstanceId' \
+            --output text)
+          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_OUTPUT
   
-    run-flask:
-      name: Run Flask App
-      needs: start-runner
-      runs-on: [self-hosted, ec2]
-      steps:
-        - name: Checkout repo
-          uses: actions/checkout@v3
+  run-flask:
+    name: Run Flask App
+    needs: start-runner
+    runs-on: [self-hosted, ec2]
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
           
-        - name: Set up Python
-          uses: actions/setup-python@v4
-          with:
-            python-version: '3.10'
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: Install dependencies
+        run: |
+          pip install flask
+          apt update
+          apt install -y jq curl
   
-        - name: Install dependencies
-          run: |
-            pip install flask
-            sudo apt update
-            sudo apt install -y jq curl
+      - name: Start Flask app
+        run: |
+          nohup python main.py &
+        env:
+          FLASK_ENV: development
   
-        - name: Start Flask app
-          run: |
-            nohup python main.py &
-          env:
-            FLASK_ENV: development
+      - name: Wait and keep server alive
+        run: |
+           PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
+           echo "Flask app started at: http://$PUBLIC_IP:5000"
+           echo "On EC2 instance ID: ${{ needs.start-runner.outputs.instance-id }}"
+           sleep 300
   
-        - name: Wait and keep server alive
-          run: |
-             PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
-             echo "Flask app started at: http://$PUBLIC_IP:5000"
-             echo "On EC2 instance ID: ${{ needs.start-runner.outputs.instance-id }}"
-             sleep 300
+  stop-runner:
+    name: Stop self-hosted EC2 runner
+    needs:
+      - start-runner
+      - run-flask
+    runs-on: ubuntu-latest
+    environment: Backstage
+    steps:
+      - name: Configure AWS credentials
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+          aws-region: ${{ secrets.AWS_REGION }}
   
-    stop-runner:
-      name: Stop self-hosted EC2 runner
-      needs:
-        - start-runner
-        - run-flask
-      runs-on: ubuntu-latest
-      environment: Backstage
-      steps:
-        - name: Configure AWS credentials
-          uses: aws-actions/configure-aws-credentials@v4
-          with:
-            aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
-            aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
-            aws-region: ${{ secrets.AWS_REGION }}
-  
-        - name: Stop EC2
-          if: ${{ always() }}
-          run: |
-            aws ec2 terminate-instances --instance-ids ${{ needs.start-runner.outputs.instance-id }}
+      - name: Stop EC2
+        if: ${{ always() }}
+        run: |
+          aws ec2 terminate-instances --instance-ids ${{ needs.start-runner.outputs.instance-id }}
