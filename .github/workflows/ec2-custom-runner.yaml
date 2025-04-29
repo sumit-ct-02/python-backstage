@@ -62,10 +62,6 @@ jobs:
             --subnet-id subnet-055bc0f5f47a83b3a \
             --security-group-ids sg-08baa8217c415d23c \
             --user-data $USER_DATA \
-            --tag-specifications 'ResourceType=instance,Tags=[
-              {"Key": "Name", "Value": "ec2-github-runner"},
-              {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
-            ]
             --query 'Instances[0].InstanceId' \
             --output text)
           echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
@@ -73,7 +69,7 @@ jobs:
   run-flask:
     name: Run Flask App
     needs: start-runner
-    runs-on:  ${{ needs.start-runner.outputs.ec2-instance-id }}
+    runs-on: ubuntu-latest
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
