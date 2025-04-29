@@ -73,7 +73,7 @@ jobs:
   run-flask:
     name: Run Flask App
     needs: start-runner
-    runs-on:  ${{ needs.start-runner.outputs.label }}
+    runs-on:  ${{ needs.start-runner.outputs.ec2-instance-id }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
