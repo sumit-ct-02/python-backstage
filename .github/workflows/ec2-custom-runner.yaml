@@ -69,7 +69,7 @@ jobs:
   run-flask:
     name: Run Flask App
     needs: start-runner
-    runs-on: ubuntu-latest
+    runs-on: ${{ needs.start-runner.outputs.label }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
