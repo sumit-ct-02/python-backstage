@@ -9,7 +9,7 @@ jobs:
     runs-on: ubuntu-latest
     environment: Backstage
     outputs:
-      label: ${{ steps.start-ec2-runner.outputs.instance_id }}
+      label: ${{ steps.start-ec2-runner.outputs.INSTANCE_ID }}
     steps:
       - name: Verify AWS credentials
         run: |
@@ -38,6 +38,7 @@ jobs:
       #         {"Key": "GitHubRepository", "Value": "${{ github.repository }}"}
       #       ]
       - name: Launch EC2 instance
+        id: start-ec2-runner
         run: |
           USER_DATA=$(base64 -w0 <<EOF
           #!/bin/bash
@@ -50,7 +51,7 @@ jobs:
           #Extract the installer
           tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
           # Create the runner and start the configuration experience
-          ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWK532YSQI6FZHEHYX3ICBR7W
+          ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWK532YSQI6FZHEHYX3ICBR7W --label ec2 --unattended
           # Last step, run it!
           ./run.sh
           EOF
@@ -63,12 +64,12 @@ jobs:
             --user-data $USER_DATA \
             --query 'Instances[0].InstanceId' \
             --output text)
-          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
+          echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_OUTPUT
 
   run-flask:
     name: Run Flask App
     needs: start-runner
-    runs-on: ${{ needs.start-ec2-runner.outputs.instance_id }}
+    runs-on: [self-hosted, ec2]
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
@@ -94,7 +95,7 @@ jobs:
         run: |
            PUBLIC_IP=$(curl -s http://checkip.amazonaws.com)
            echo "Flask app started at: http://$PUBLIC_IP:5000"
-           echo "On EC2 instance ID: ${{ needs.start-runner.outputs.ec2-instance-id }}"
+           echo "On EC2 instance ID: ${{ needs.start-runner.outputs.INSTANCE_ID}}"
            sleep 300
 
   stop-runner:
