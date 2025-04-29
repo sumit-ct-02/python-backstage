@@ -41,28 +41,27 @@ jobs:
       - name: Launch EC2 instance
         run: |
           USER_DATA=$(base64 -w0 <<EOF
-            #!/bin/bash
-              apt update
-              # Make A Directory 
-              cd /home/ubuntu
-              mkdir actions-runner && cd actions-runner     
-              # Download the latest runner package
-              curl -o actions-runner-linux-x64-2.323.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.323.0/actions-runner-linux-x64-2.323.0.tar.gz
-              #Extract the installer
-              tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
-              # Create the runner and start the configuration experience
-              ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWK532YSQI6FZHEHYX3ICBR7W
-              # Last step, run it!
-              ./run.sh
-            EOF
-            )
+          #!/bin/bash
+          apt update
+          # Make A Directory 
+          cd /home/ubuntu
+          mkdir actions-runner && cd actions-runner     
+          # Download the latest runner package
+          curl -o actions-runner-linux-x64-2.323.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.323.0/actions-runner-linux-x64-2.323.0.tar.gz
+          #Extract the installer
+          tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
+          # Create the runner and start the configuration experience
+          ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWK532YSQI6FZHEHYX3ICBR7W
+          # Last step, run it!
+          ./run.sh
+          EOF
+          )
           INSTANCE_ID=$(aws ec2 run-instances \
-            --image-id ami-xxxxxx \
+            --image-id ami-0e35ddab05955cf57 \
             --instance-type t2.micro \
-            --subnet-id subnet-xxxxxx \
-            --security-group-ids sg-xxxxxx \
-            --key-name my-key-pair \
-             --user-data $USER_DATA \
+            --subnet-id subnet-055bc0f5f47a83b3a \
+            --security-group-ids sg-08baa8217c415d23c \
+            --user-data $USER_DATA \
             --query 'Instances[0].InstanceId' \
             --output text)
           echo "INSTANCE_ID=$INSTANCE_ID" >> $GITHUB_ENV
