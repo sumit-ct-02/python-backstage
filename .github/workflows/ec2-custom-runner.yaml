@@ -29,6 +29,7 @@ jobs:
           USER_DATA=$(base64 -w0 <<EOF
           #!/bin/bash
           apt update
+          sudo -u ubuntu
           cd /home/ubuntu
           mkdir actions-runner && cd actions-runner  
           whoami
