@@ -48,8 +48,8 @@ jobs:
           INSTANCE_ID=$(aws ec2 run-instances \
             --image-id ami-0e35ddab05955cf57 \
             --instance-type t2.micro \
-            --subnet-id subnet-055bc0f5f47a83b3a \
-            --security-group-ids sg-08baa8217c415d23c \
+            --subnet-id subnet-0376b05408a1be5d4 \
+            --security-group-ids sg-0285f18af6bb116b3 \
             --user-data $USER_DATA \
             --query 'Instances[0].InstanceId' \
             --output text)
