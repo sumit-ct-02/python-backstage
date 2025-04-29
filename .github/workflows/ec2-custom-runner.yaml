@@ -33,6 +33,9 @@ jobs:
           mkdir actions-runner && cd actions-runner  
           curl -o actions-runner-linux-x64-2.323.0.tar.gz -L https://github.com/actions/runner/releases/download/v2.323.0/actions-runner-linux-x64-2.323.0.tar.gz
           tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
+          chmod -R 755 /home/ubuntu/actions-runner
+          chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
+          
           sudo -u ubuntu ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWKQUBGICYKMPVIYAU3ICCBZY --labels ec2 --unattended
           sudo -u ubuntu ./run.sh
           EOF
