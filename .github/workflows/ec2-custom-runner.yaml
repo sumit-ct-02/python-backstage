@@ -54,7 +54,7 @@ jobs:
               ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWK532YSQI6FZHEHYX3ICBR7W
               # Last step, run it!
               ./run.sh
-              EOF
+            EOF
             )
           INSTANCE_ID=$(aws ec2 run-instances \
             --image-id ami-xxxxxx \
