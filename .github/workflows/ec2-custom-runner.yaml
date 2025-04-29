@@ -51,8 +51,7 @@ jobs:
           #Extract the installer
           tar xzf ./actions-runner-linux-x64-2.323.0.tar.gz
           # Create the runner and start the configuration experience
-          ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWK532YSQI6FZHEHYX3ICBR7W --label ec2 --unattended
-          # Last step, run it!
+          ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWK532YSQI6FZHEHYX3ICBR7W 
           ./run.sh
           EOF
           )
@@ -69,7 +68,7 @@ jobs:
   run-flask:
     name: Run Flask App
     needs: start-runner
-    runs-on: [self-hosted, ec2]
+    runs-on: ${{ needs.start-ec2-runner.outputs.INSTANCE_ID }}
     steps:
       - name: Checkout repo
         uses: actions/checkout@v3
