@@ -2,7 +2,7 @@ name: Run Flask App on EC2 Runner
   
 on:
   workflow_dispatch:
-
+#For OIDC Authentication
 permissions:
   id-token: write
   contents: read
