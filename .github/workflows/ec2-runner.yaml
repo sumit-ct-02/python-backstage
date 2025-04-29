@@ -29,7 +29,7 @@ jobs:
         with:
           mode: start
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
-          ec2-image-id: ami-0e35ddab05955cf57   # <<< replace with your AMI
+          ec2-image-id: ami-0e35ddab05955cf57  
           ec2-instance-type: t2.micro
           subnet-id: subnet-055bc0f5f47a83b3a  
           security-group-id: sg-08baa8217c415d23c
@@ -89,7 +89,7 @@ jobs:
           aws-region: ${{ secrets.AWS_REGION }}
 
       - name: Stop EC2 runner
-        uses: machulav/ec2-github-runner@v2
+        uses: sumit-ct-02/ec2-github-runner@v2
         with:
           mode: stop
           github-token: ${{ secrets.GH_PERSONAL_ACCESS_TOKEN }}
