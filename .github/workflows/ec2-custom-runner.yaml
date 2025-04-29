@@ -36,7 +36,7 @@ jobs:
           chmod -R 755 /home/ubuntu/actions-runner
           chown -R ubuntu:ubuntu /home/ubuntu/actions-runner
           
-          sudo -u ubuntu ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWKQUBGICYKMPVIYAU3ICCBZY --labels ec2 --unattended
+          sudo -u ubuntu ./config.sh --url https://github.com/sumit-ct-02/python-backstage --token BRPOKWLCD6VP5CAOHSXMYCLICCOJE --labels ec2 --unattended
           sudo -u ubuntu ./run.sh
           EOF
           )
