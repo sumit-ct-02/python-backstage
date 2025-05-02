@@ -3,6 +3,11 @@ name: Run Flask App on EC2 Runner
 on:
   workflow_dispatch:
 
+#For OIDC Authentication
+permissions:
+  id-token: write
+  contents: read
+  
 jobs:
   start-runner:
     name: Start self-hosted EC2 runner
