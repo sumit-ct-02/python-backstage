@@ -3,8 +3,7 @@ kind: Component
 metadata:
   name: python-template
   description: Python app scaffolding template
-  tags:
-    - 'devcontainers'
+
   annotations:
     aws.com/lambda-function-name: HelloWorld
     aws.com/lambda-region: ap-south-1
