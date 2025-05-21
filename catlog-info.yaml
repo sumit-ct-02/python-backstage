@@ -5,11 +5,8 @@ metadata:
   description: Python app scaffolding template
 
   annotations:
-    aws.com/lambda-function-name: HelloWorld
-    aws.com/lambda-region: ap-south-1
     prometheus.io/rule: service
     prometheus.io/alert: python-template
-    devcontainers.io/remote-url: 'vscode://devcontainers/open?url=https://github.com/sumit-ct-02/python-backstage'
     github.com/project-slug: sumit-ct-02/python-backstage
 spec:
   type: service
